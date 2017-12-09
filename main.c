@@ -34,19 +34,52 @@ typedef struct {
     unsigned short int qtdeTabelas;
 } Database;
 
+//---------------------------------------------------------------------------------
+
 Database* criarDatabase(char* nome){
-  Database* db = (Database*) malloc(sizeof(Database));
-  strcpy(db->nome, nome);
-  db->tabelas =  NULL;
-  db->tamTabelas = 4;
-  db->qtdeTabelas = 0;
+    Database* db = (Database*) malloc(sizeof(Database));
+    strcpy(db->nome, nome);
+    db->tabelas = calloc(4,sizeof(Tabela));
+    db->tamTabelas = 4;
+    db->qtdeTabelas = 0;
+}
+
+void criarTabela(Database* db, char* nome, char* atributos, char* tipos, int qtdeAtributos){
+
+    NoAtributo* aux;
+    NoAtributo* auxAnterior;
+
+    db->tabelas[db->qtdeTabelas] = (Tabela*) malloc(sizeof(Tabela));
+    strcpy(db->tabelas[db->qtdeTabelas]->nome, nome);
+    db->tabelas[db->qtdeTabelas]->atributos = malloc(sizeof(NoAtributo)); //Sentinela Atributos
+    for (size_t i = 0; i < qtdeAtributos; i++) {
+        aux = (NoAtributo*) malloc(sizeof(NoAtributo));
+        aux->valores = malloc(sizeof(NoAtributo)); //Sentinela Valores Atributos
+        aux->valores->cima = aux->valores;
+        aux->valores->baixo = aux->valores;
+        if (i == 0) {
+            aux->nome = atributos[0];
+            aux->tipo = tipos[0];
+            db->tabelas[db->qtdeTabelas]->atributos->dir = aux;
+            aux->esq = db->tabelas[db->qtdeTabelas]->atributos->dir
+        }else{
+
+        }
+    }
 }
 
 int main(){
+
+    char* atributos[3] = {"ra", "nome", "nota"};
+    char* tipos[3] = {"integer", "string", "float"};
+
     Database* db = criarDatabase("Universidade");
-    printf("%s\n %d\n %d", db->nome, db->tamTabelas, db->qtdeTabelas);
+    criarTabela(db, "Alunos", atributos, tipos, 3);
+    printf("%s\n %d\n %d\n %s", db->nome, db->tamTabelas, db->qtdeTabelas, db->tabelas[0]->nome);
 
 
-    //criarTabela(db, "Alunos", {"ra", "nome", "nota"}, {"integer", "string", "float"}, 3);
+
+
+
     //imprimirDatabase(db);
 }
